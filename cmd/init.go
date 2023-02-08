@@ -5,6 +5,8 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
 
 	"github.com/spf13/cobra"
 )
@@ -24,8 +26,28 @@ to quickly create a Cobra application.`,
 	},
 }
 
+type res struct {
+	Msg    string `json:"msg"`
+	Status bool   `json:"status"`
+}
+
 func init() {
 	rootCmd.AddCommand(initCmd)
+	req, err := http.NewRequest(http.MethodPost, "http://localhost:5550/cloud", nil)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		panic(err.Error())
+	}
+	body, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Printf(string(body))
 
 	// Here you will define your flags and configuration settings.
 

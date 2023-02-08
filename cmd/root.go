@@ -4,9 +4,6 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -41,20 +38,4 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	req, err := http.NewRequest(http.MethodGet, "http://localhost:5556", nil)
-	if err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	resBody, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	}
-	fmt.Printf("%s\n", resBody)
 }
