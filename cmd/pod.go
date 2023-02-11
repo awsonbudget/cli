@@ -9,8 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// PodCmd represents the pod command
-var PodCmd = &cobra.Command{
+var podCmd = &cobra.Command{
 	Use:   "pod",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -24,8 +23,53 @@ to quickly create a Cobra application.`,
 	},
 }
 
+var podLsCmd = &cobra.Command{
+	Use:   "ls",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("podLs called")
+	},
+}
+
+var podRegisterCmd = &cobra.Command{
+	Use:   "register",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("podRegister called")
+	},
+}
+
+var podRmCmd = &cobra.Command{
+	Use:   "rm",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("podRm called")
+	},
+}
+
 func init() {
-	rootCmd.AddCommand(PodCmd)
+	rootCmd.AddCommand(podCmd)
+	podCmd.AddCommand(podLsCmd)
+	podCmd.AddCommand(podRegisterCmd)
+	podCmd.AddCommand(podRmCmd)
 
 	// Here you will define your flags and configuration settings.
 

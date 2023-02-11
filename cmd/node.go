@@ -9,8 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// nodeCmd represents the node command
-var NodeCmd = &cobra.Command{
+var nodeCmd = &cobra.Command{
 	Use:   "node",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -24,8 +23,53 @@ to quickly create a Cobra application.`,
 	},
 }
 
+var nodeLsCmd = &cobra.Command{
+	Use:   "ls",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("nodeLs called")
+	},
+}
+
+var nodeRegisterCmd = &cobra.Command{
+	Use:   "register",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("nodeRegister called")
+	},
+}
+
+var nodeRmCmd = &cobra.Command{
+	Use:   "rm",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("nodeRm called")
+	},
+}
+
 func init() {
-	rootCmd.AddCommand(NodeCmd)
+	rootCmd.AddCommand(nodeCmd)
+	nodeCmd.AddCommand(nodeLsCmd)
+	nodeCmd.AddCommand(nodeRegisterCmd)
+	nodeCmd.AddCommand(nodeRmCmd)
 
 	// Here you will define your flags and configuration settings.
 

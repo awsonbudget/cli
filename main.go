@@ -5,8 +5,9 @@ package main
 
 import (
 	"awsonbudget/cli/cmd"
-	_ "awsonbudget/cli/cmd/pod"
 )
+
+var URL = "http://localhost:5550"
 
 func main() {
 	cmd.Execute()

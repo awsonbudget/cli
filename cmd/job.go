@@ -9,8 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// jobCmd represents the job command
-var JobCmd = &cobra.Command{
+var jobCmd = &cobra.Command{
 	Use:   "job",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -24,8 +23,53 @@ to quickly create a Cobra application.`,
 	},
 }
 
+var jobLsCmd = &cobra.Command{
+	Use:   "ls",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("jobLs called")
+	},
+}
+
+var jobLaunchCmd = &cobra.Command{
+	Use:   "launch",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("jobLaunch called")
+	},
+}
+
+var jobAbortCmd = &cobra.Command{
+	Use:   "abort",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("jobAbort called")
+	},
+}
+
 func init() {
-	rootCmd.AddCommand(JobCmd)
+	rootCmd.AddCommand(jobCmd)
+	jobCmd.AddCommand(jobLsCmd)
+	jobCmd.AddCommand(jobLaunchCmd)
+	jobCmd.AddCommand(jobAbortCmd)
 
 	// Here you will define your flags and configuration settings.
 
