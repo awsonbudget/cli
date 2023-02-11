@@ -52,7 +52,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Args: cobra.MaximumNArgs(1),
+	Args: cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodGet, ManagerEp+"/cloud/pod/", nil)
@@ -61,12 +61,6 @@ to quickly create a Cobra application.`,
 			fmt.Println(err)
 			return
 		}
-
-		params := req.URL.Query()
-		if len(args) > 0 {
-			params.Add("pod_name", args[0])
-		}
-		req.URL.RawQuery = params.Encode()
 
 		// Send the request
 		res, err := Client.Do(req)
