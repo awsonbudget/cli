@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var jobEp = "/cloud/job/"
+
 var jobCmd = &cobra.Command{
 	Use:   "job",
 	Short: "A brief description of your command",
