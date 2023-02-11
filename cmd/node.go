@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var nodeEp string = "/cloud/node"
+
 type nodeLsResp struct {
 	Status bool   `json:"status"`
 	Msg    string `json:"msg"`
@@ -58,7 +60,7 @@ to quickly create a Cobra application.`,
 	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
-		req, err := http.NewRequest(http.MethodGet, ManagerEp+"/cloud/node/", nil)
+		req, err := http.NewRequest(http.MethodGet, ManagerEp+nodeEp, nil)
 		if err != nil {
 			fmt.Print("Failed: ")
 			fmt.Println(err)
@@ -115,7 +117,7 @@ to quickly create a Cobra application.`,
 	Args: cobra.RangeArgs(1, 2),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
-		req, err := http.NewRequest(http.MethodPost, ManagerEp+"/cloud/node/", nil)
+		req, err := http.NewRequest(http.MethodPost, ManagerEp+nodeEp, nil)
 		if err != nil {
 			fmt.Print("Failed: ")
 			fmt.Println(err)
@@ -171,7 +173,7 @@ to quickly create a Cobra application.`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
-		req, err := http.NewRequest(http.MethodDelete, ManagerEp+"/cloud/node/", nil)
+		req, err := http.NewRequest(http.MethodDelete, ManagerEp+nodeEp, nil)
 		if err != nil {
 			fmt.Print("Failed: ")
 			fmt.Println(err)

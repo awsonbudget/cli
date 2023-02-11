@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var podEp string = "/cloud/pod"
+
 type podLsResp struct {
 	Status bool   `json:"status"`
 	Msg    string `json:"msg"`
@@ -54,7 +56,7 @@ to quickly create a Cobra application.`,
 	Args: cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
-		req, err := http.NewRequest(http.MethodGet, ManagerEp+"/cloud/pod/", nil)
+		req, err := http.NewRequest(http.MethodGet, ManagerEp+podEp, nil)
 		if err != nil {
 			fmt.Print("Failed: ")
 			fmt.Println(err)
@@ -105,7 +107,7 @@ to quickly create a Cobra application.`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
-		req, err := http.NewRequest(http.MethodPost, ManagerEp+"/cloud/pod/", nil)
+		req, err := http.NewRequest(http.MethodPost, ManagerEp+podEp, nil)
 		if err != nil {
 			fmt.Print("Failed: ")
 			fmt.Println(err)
@@ -157,7 +159,7 @@ to quickly create a Cobra application.`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
-		req, err := http.NewRequest(http.MethodDelete, ManagerEp+"/cloud/pod/", nil)
+		req, err := http.NewRequest(http.MethodDelete, ManagerEp+podEp, nil)
 		if err != nil {
 			fmt.Print("Failed: ")
 			fmt.Println(err)
