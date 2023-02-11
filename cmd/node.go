@@ -16,8 +16,8 @@ type nodeLsResp struct {
 	Msg    string `json:"msg"`
 	Data   []struct {
 		Name   string `json:"name"`
-		Id     string    `json:"id"`
-		Status string   `json:"status"`
+		Id     string `json:"id"`
+		Status string `json:"status"`
 		Pod    struct {
 			Name string `json:"name"`
 			Id   int    `json:"id"`
@@ -44,9 +44,6 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("node called")
-	},
 }
 
 var nodeLsCmd = &cobra.Command{
@@ -97,7 +94,7 @@ to quickly create a Cobra application.`,
 			fmt.Print("Success: ")
 			fmt.Println(response.Msg)
 			for _, node := range response.Data {
-                fmt.Printf("| ID: %s |\n| Name: %s | Status: %s | Pod: %s |\n", node.Id, node.Name, node.Status, node.Pod.Name)
+				fmt.Printf("| ID: %s |\n| Name: %s | Status: %s | Pod: %s |\n", node.Id, node.Name, node.Status, node.Pod.Name)
 			}
 		} else {
 			fmt.Print("Failed: ")
@@ -115,7 +112,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-    Args: cobra.RangeArgs(1, 2),
+	Args: cobra.RangeArgs(1, 2),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodPost, ManagerEp+"/cloud/node/", nil)
@@ -162,8 +159,6 @@ to quickly create a Cobra application.`,
 	},
 }
 
-
-
 var nodeRmCmd = &cobra.Command{
 	Use:   "rm",
 	Short: "A brief description of your command",
@@ -173,7 +168,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-    Args: cobra.ExactArgs(1),
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodDelete, ManagerEp+"/cloud/node/", nil)
@@ -215,7 +210,6 @@ to quickly create a Cobra application.`,
 		}
 	},
 }
-
 
 func init() {
 	rootCmd.AddCommand(nodeCmd)
