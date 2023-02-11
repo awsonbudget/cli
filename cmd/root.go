@@ -4,10 +4,14 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"net/http"
 	"os"
 
 	"github.com/spf13/cobra"
 )
+
+var ManagerEp = "http://localhost:5550"
+var Client = &http.Client{}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{

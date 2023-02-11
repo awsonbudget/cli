@@ -4,10 +4,32 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/spf13/cobra"
 )
+
+type podLsResp struct {
+	Status bool   `json:"status"`
+	Msg    string `json:"msg"`
+	Data   []struct {
+		Name  string `json:"name"`
+		Id    int    `json:"id"`
+		Nodes int    `json:"nodes"`
+	} `json:"data"`
+}
+
+type podRegisterResp struct {
+	Status bool   `json:"status"`
+	Msg    string `json:"msg"`
+}
+
+type podRmResp struct {
+	Status bool   `json:"status"`
+	Msg    string `json:"msg"`
+}
 
 var podCmd = &cobra.Command{
 	Use:   "pod",
@@ -18,9 +40,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("pod called")
-	},
+	Run: func(cmd *cobra.Command, args []string) {},
 }
 
 var podLsCmd = &cobra.Command{
@@ -32,13 +52,56 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("podLs called")
+		// Build the request
+		req, err := http.NewRequest(http.MethodGet, ManagerEp+"/cloud/pod/", nil)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		params := req.URL.Query()
+		if len(args) > 0 {
+			params.Add("pod_name", args[0])
+		}
+		req.URL.RawQuery = params.Encode()
+
+		// Send the request
+		res, err := Client.Do(req)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response podLsResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+			for _, pod := range response.Data {
+				fmt.Printf("| ID: %d | Name: %s | Nodes: %d |\n", pod.Id, pod.Name, pod.Nodes)
+			}
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
 	},
 }
 
 var podRegisterCmd = &cobra.Command{
-	Use:   "register",
+	Use:   "register [pod_name]",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -46,13 +109,51 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("podRegister called")
+		// Build the request
+		req, err := http.NewRequest(http.MethodPost, ManagerEp+"/cloud/pod/", nil)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		params := req.URL.Query()
+		params.Add("pod_name", args[0])
+		req.URL.RawQuery = params.Encode()
+
+		// Send the request
+		res, err := Client.Do(req)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response podRegisterResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
 	},
 }
 
 var podRmCmd = &cobra.Command{
-	Use:   "rm",
+	Use:   "rm [pod_name]",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -60,8 +161,46 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("podRm called")
+		// Build the request
+		req, err := http.NewRequest(http.MethodDelete, ManagerEp+"/cloud/pod/", nil)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		params := req.URL.Query()
+		params.Add("pod_name", args[0])
+		req.URL.RawQuery = params.Encode()
+
+		// Send the request
+		res, err := Client.Do(req)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response podRmResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
 	},
 }
 

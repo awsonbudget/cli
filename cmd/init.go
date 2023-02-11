@@ -4,10 +4,17 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/spf13/cobra"
 )
+
+type initResp struct {
+	Status bool   `json:"status"`
+	Msg    string `json:"msg"`
+}
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
@@ -20,7 +27,29 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
+		res, err := http.Post(ManagerEp+"/cloud/", "", nil)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response initResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
 	},
 }
 
