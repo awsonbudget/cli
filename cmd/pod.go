@@ -58,17 +58,13 @@ to quickly create a Cobra application.`,
 		// Build the request
 		req, err := http.NewRequest(http.MethodGet, ManagerEp+podEp, nil)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 
 		// Send the request
 		res, err := Client.Do(req)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 		defer res.Body.Close()
 
@@ -76,9 +72,7 @@ to quickly create a Cobra application.`,
 		var response podLsResp
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 
 		// Print the response
@@ -110,9 +104,7 @@ to quickly create a Cobra application.`,
 		// Build the request
 		req, err := http.NewRequest(http.MethodPost, ManagerEp+podEp, nil)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 
 		params := req.URL.Query()
@@ -122,9 +114,7 @@ to quickly create a Cobra application.`,
 		// Send the request
 		res, err := Client.Do(req)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 		defer res.Body.Close()
 
@@ -132,9 +122,7 @@ to quickly create a Cobra application.`,
 		var response podRegisterResp
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 
 		// Print the response
@@ -162,9 +150,7 @@ to quickly create a Cobra application.`,
 		// Build the request
 		req, err := http.NewRequest(http.MethodDelete, ManagerEp+podEp, nil)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 
 		params := req.URL.Query()
@@ -174,9 +160,7 @@ to quickly create a Cobra application.`,
 		// Send the request
 		res, err := Client.Do(req)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 		defer res.Body.Close()
 
@@ -184,9 +168,7 @@ to quickly create a Cobra application.`,
 		var response podRmResp
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 
 		// Print the response

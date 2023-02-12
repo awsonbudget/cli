@@ -28,22 +28,18 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-    Args: cobra.NoArgs,
+	Args: cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodPost, ManagerEp+initEp, nil)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 
 		// Send the request
 		res, err := Client.Do(req)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 		defer res.Body.Close()
 
@@ -51,9 +47,7 @@ to quickly create a Cobra application.`,
 		var response initResp
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 
 		// Print the response
