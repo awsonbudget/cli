@@ -4,12 +4,41 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/spf13/cobra"
 )
 
-var jobEp = "/cloud/job/"
+var jobEp = "/cloud/job"
+
+type jobLsResp struct {
+	Status bool   `json:"status"`
+	Msg    string `json:"msg"`
+	Data   []struct {
+		Name   string `json:"name"`
+		Id     string `json:"id"`
+		Status string `json:"status"`
+		Node   string `json:"node"`
+	} `json:"data"`
+}
+
+type jobLaunchResp struct {
+	Status bool   `json:"status"`
+	Msg    string `json:"msg"`
+}
+
+type jobAbortResp struct {
+	Status bool   `json:"status"`
+	Msg    string `json:"msg"`
+}
+
+type jobLogResp struct {
+	Status bool   `json:"status"`
+	Msg    string `json:"msg"`
+	Data   string `json:"data"`
+}
 
 var jobCmd = &cobra.Command{
 	Use:   "job",
@@ -23,7 +52,7 @@ to quickly create a Cobra application.`,
 }
 
 var jobLsCmd = &cobra.Command{
-	Use:   "ls",
+	Use:   "ls [node_id]",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -31,13 +60,58 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("jobLs called")
+		// Build the request
+		req, err := http.NewRequest(http.MethodGet, ManagerEp+jobEp, nil)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		params := req.URL.Query()
+		if len(args) > 0 {
+			params.Add("node_id", args[0])
+		}
+
+		req.URL.RawQuery = params.Encode()
+
+		// Send the request
+		res, err := Client.Do(req)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response jobLsResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+			for _, job := range response.Data {
+				fmt.Printf("| ID: %s | Name: %s | Status: %s | Node: %s |\n",
+					job.Id, job.Name, job.Status, job.Node)
+			}
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
 	},
 }
 
 var jobLaunchCmd = &cobra.Command{
-	Use:   "launch",
+	Use:   "launch [job_name] [job_script]",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -45,13 +119,52 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	Args: cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("jobLaunch called")
+		// Build the request
+		req, err := http.NewRequest(http.MethodPost, ManagerEp+jobEp, nil)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		params := req.URL.Query()
+		params.Add("job_name", args[0])
+		req.URL.RawQuery = params.Encode()
+
+		// Send the request
+		res, err := Client.Do(req)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response nodeRegisterResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
+
 	},
 }
 
 var jobAbortCmd = &cobra.Command{
-	Use:   "abort",
+	Use:   "abort [job_id]",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -59,8 +172,99 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("jobAbort called")
+		// Build the request
+		req, err := http.NewRequest(http.MethodDelete, ManagerEp+jobEp, nil)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		params := req.URL.Query()
+		params.Add("job_id", args[0])
+		req.URL.RawQuery = params.Encode()
+
+		// Send the request
+		res, err := Client.Do(req)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response jobAbortResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
+	},
+}
+
+var jobLogCmd = &cobra.Command{
+	Use:   "log [job_id]",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Args: cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		// Build the request
+		req, err := http.NewRequest(http.MethodGet, ManagerEp+jobEp+"/log", nil)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		params := req.URL.Query()
+		params.Add("job_id", args[0])
+		req.URL.RawQuery = params.Encode()
+
+		// Send the request
+		res, err := Client.Do(req)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response jobLogResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+			fmt.Println(response.Data)
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
 	},
 }
 
@@ -69,6 +273,7 @@ func init() {
 	jobCmd.AddCommand(jobLsCmd)
 	jobCmd.AddCommand(jobLaunchCmd)
 	jobCmd.AddCommand(jobAbortCmd)
+	jobCmd.AddCommand(jobLogCmd)
 
 	// Here you will define your flags and configuration settings.
 

@@ -37,6 +37,12 @@ type nodeRmResp struct {
 	Msg    string `json:"msg"`
 }
 
+type nodeLogResp struct {
+	Status bool   `json:"status"`
+	Msg    string `json:"msg"`
+	Data   string `json:"data"`
+}
+
 var nodeCmd = &cobra.Command{
 	Use:   "node",
 	Short: "A brief description of your command",
@@ -49,7 +55,7 @@ to quickly create a Cobra application.`,
 }
 
 var nodeLsCmd = &cobra.Command{
-	Use:   "ls",
+	Use:   "ls [node_name]",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -62,9 +68,7 @@ to quickly create a Cobra application.`,
 		// Build the request
 		req, err := http.NewRequest(http.MethodGet, ManagerEp+nodeEp, nil)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+		    panic(err)
 		}
 
 		params := req.URL.Query()
@@ -76,9 +80,7 @@ to quickly create a Cobra application.`,
 		// Send the request
 		res, err := Client.Do(req)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+            panic(err)
 		}
 		defer res.Body.Close()
 
@@ -86,9 +88,7 @@ to quickly create a Cobra application.`,
 		var response nodeLsResp
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
-			fmt.Print("Failed: ")
-			fmt.Println(err)
-			return
+            panic(err)
 		}
 
 		// Print the response
@@ -96,7 +96,8 @@ to quickly create a Cobra application.`,
 			fmt.Print("Success: ")
 			fmt.Println(response.Msg)
 			for _, node := range response.Data {
-				fmt.Printf("| ID: %s |\n| Name: %s | Status: %s | Pod: %s |\n", node.Id, node.Name, node.Status, node.Pod.Name)
+				fmt.Printf("| ID: %s |\n| Name: %s | Status: %s | Pod: %s |\n",
+					node.Id, node.Name, node.Status, node.Pod.Name)
 			}
 		} else {
 			fmt.Print("Failed: ")
@@ -106,7 +107,7 @@ to quickly create a Cobra application.`,
 }
 
 var nodeRegisterCmd = &cobra.Command{
-	Use:   "register",
+	Use:   "register [node_name] [pod_name]",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -162,7 +163,7 @@ to quickly create a Cobra application.`,
 }
 
 var nodeRmCmd = &cobra.Command{
-	Use:   "rm",
+	Use:   "rm [node_name]",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -213,11 +214,65 @@ to quickly create a Cobra application.`,
 	},
 }
 
+var nodeLogCmd = &cobra.Command{
+	Use:   "log [node_id]",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Args: cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		// Build the request
+		req, err := http.NewRequest(http.MethodGet, ManagerEp+nodeEp+"/log", nil)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		params := req.URL.Query()
+		params.Add("job_id", args[0])
+		req.URL.RawQuery = params.Encode()
+
+		// Send the request
+		res, err := Client.Do(req)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response nodeLogResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			fmt.Print("Failed: ")
+			fmt.Println(err)
+			return
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+			fmt.Println(response.Data)
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(nodeCmd)
 	nodeCmd.AddCommand(nodeLsCmd)
 	nodeCmd.AddCommand(nodeRegisterCmd)
 	nodeCmd.AddCommand(nodeRmCmd)
+	nodeCmd.AddCommand(nodeLogCmd)
 
 	// Here you will define your flags and configuration settings.
 

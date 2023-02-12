@@ -86,7 +86,8 @@ to quickly create a Cobra application.`,
 			fmt.Print("Success: ")
 			fmt.Println(response.Msg)
 			for _, pod := range response.Data {
-				fmt.Printf("| ID: %d | Name: %s | Nodes: %d |\n", pod.Id, pod.Name, pod.Nodes)
+				fmt.Printf("| ID: %d | Name: %s | Nodes: %d |\n",
+					pod.Id, pod.Name, pod.Nodes)
 			}
 		} else {
 			fmt.Print("Failed: ")

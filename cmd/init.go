@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var initEp string = "/cloud"
+
 type initResp struct {
 	Status bool   `json:"status"`
 	Msg    string `json:"msg"`
@@ -26,9 +28,10 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+    Args: cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
-		req, err := http.NewRequest(http.MethodGet, ManagerEp+"/cloud", nil)
+		req, err := http.NewRequest(http.MethodPost, ManagerEp+initEp, nil)
 		if err != nil {
 			fmt.Print("Failed: ")
 			fmt.Println(err)
@@ -45,7 +48,7 @@ to quickly create a Cobra application.`,
 		defer res.Body.Close()
 
 		// Decode the response
-		var response initResp 
+		var response initResp
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			fmt.Print("Failed: ")
