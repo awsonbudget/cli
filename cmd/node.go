@@ -71,11 +71,11 @@ to quickly create a Cobra application.`,
 			panic(err)
 		}
 
-		params := req.URL.Query()
 		if len(args) > 0 {
+			params := req.URL.Query()
 			params.Add("node_name", args[0])
+			req.URL.RawQuery = params.Encode()
 		}
-		req.URL.RawQuery = params.Encode()
 
 		// Send the request
 		res, err := Client.Do(req)
@@ -128,7 +128,6 @@ to quickly create a Cobra application.`,
 		if len(args) > 1 {
 			params.Add("pod_name", args[1])
 		}
-
 		req.URL.RawQuery = params.Encode()
 
 		// Send the request
