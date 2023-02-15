@@ -7,10 +7,11 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
-var ManagerEp = "http://localhost:5550"
+var ManagerEp string
 var Client = &http.Client{}
 
 // rootCmd represents the base command when called without any subcommands
@@ -26,7 +27,14 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	err := rootCmd.Execute()
+
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+	ManagerEp = os.Getenv("MANAGER")
+
+	err = rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}

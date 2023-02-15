@@ -7,8 +7,6 @@ import (
 	"awsonbudget/cli/cmd"
 )
 
-var URL = "http://localhost:5550"
-
 func main() {
 	cmd.Execute()
 }
