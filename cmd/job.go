@@ -49,25 +49,13 @@ type jobLogResp struct {
 
 var jobCmd = &cobra.Command{
 	Use:   "job",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "All commands related to job",
 }
 
 var jobLsCmd = &cobra.Command{
 	Use:   "ls [node_id]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.MaximumNArgs(1),
+	Short: "List all jobs on a specific nodo. If no node is specified, all jobs will be listed",
+	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodGet, ManagerEp+jobEp, nil)
@@ -112,14 +100,8 @@ to quickly create a Cobra application.`,
 
 var jobLaunchCmd = &cobra.Command{
 	Use:   "launch [job_name] [job_script]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.ExactArgs(2),
+	Short: "Launch a job given a job name and a job script",
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Prepare the script
 		file, err := os.Open(args[1])
@@ -184,14 +166,8 @@ to quickly create a Cobra application.`,
 
 var jobAbortCmd = &cobra.Command{
 	Use:   "abort [job_id]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.ExactArgs(1),
+	Short: "Abort a job given that job's ID",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodDelete, ManagerEp+jobEp, nil)
@@ -230,14 +206,8 @@ to quickly create a Cobra application.`,
 
 var jobLogCmd = &cobra.Command{
 	Use:   "log [job_id]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.ExactArgs(1),
+	Short: "Output the log of a specific job",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodGet, ManagerEp+jobEp+"/log", nil)

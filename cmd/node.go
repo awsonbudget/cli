@@ -45,25 +45,13 @@ type nodeLogResp struct {
 
 var nodeCmd = &cobra.Command{
 	Use:   "node",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "All commands related to node",
 }
 
 var nodeLsCmd = &cobra.Command{
-	Use:   "ls [node_name]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.MaximumNArgs(1),
+	Use:   "ls [pod_name]",
+	Short: "List all nodes in a specific pod. If no pod is given, all nodes will be listed",
+	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodGet, ManagerEp+nodeEp, nil)
@@ -73,7 +61,7 @@ to quickly create a Cobra application.`,
 
 		if len(args) > 0 {
 			params := req.URL.Query()
-			params.Add("node_name", args[0])
+			params.Add("pod_name", args[0])
 			req.URL.RawQuery = params.Encode()
 		}
 
@@ -108,14 +96,8 @@ to quickly create a Cobra application.`,
 
 var nodeRegisterCmd = &cobra.Command{
 	Use:   "register [node_name] [pod_name]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.RangeArgs(1, 2),
+	Short: "Register a node with a given name. If no pod is specified, it will be registered on the default pod",
+	Args:  cobra.RangeArgs(1, 2),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodPost, ManagerEp+nodeEp, nil)
@@ -157,14 +139,8 @@ to quickly create a Cobra application.`,
 
 var nodeRmCmd = &cobra.Command{
 	Use:   "rm [node_name]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.ExactArgs(1),
+	Short: "Remove a specific node given its name",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodDelete, ManagerEp+nodeEp, nil)
@@ -203,14 +179,8 @@ to quickly create a Cobra application.`,
 
 var nodeLogCmd = &cobra.Command{
 	Use:   "log [node_id]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.ExactArgs(1),
+	Short: "Output the log of a specific node",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodGet, ManagerEp+nodeEp+"/log", nil)

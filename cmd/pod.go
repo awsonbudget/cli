@@ -35,25 +35,13 @@ type podRmResp struct {
 
 var podCmd = &cobra.Command{
 	Use:   "pod",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "All commands related to pod",
 }
 
 var podLsCmd = &cobra.Command{
 	Use:   "ls",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.NoArgs,
+	Short: "List all pods",
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodGet, ManagerEp+podEp, nil)
@@ -92,14 +80,8 @@ to quickly create a Cobra application.`,
 
 var podRegisterCmd = &cobra.Command{
 	Use:   "register [pod_name]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.ExactArgs(1),
+	Short: "Register a new pod given a name",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodPost, ManagerEp+podEp, nil)
@@ -138,14 +120,8 @@ to quickly create a Cobra application.`,
 
 var podRmCmd = &cobra.Command{
 	Use:   "rm [pod_name]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.ExactArgs(1),
+	Short: "Remove a specific pod given its name",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodDelete, ManagerEp+podEp, nil)
