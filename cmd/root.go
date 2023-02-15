@@ -4,6 +4,7 @@ Copyright © 2023 Joey Yu <xiaowei.yu@mail.mcgill.ca>
 package cmd
 
 import (
+	"crypto/tls"
 	"net/http"
 	"os"
 
@@ -12,7 +13,13 @@ import (
 )
 
 var ManagerEp string
-var Client = &http.Client{}
+var Client = &http.Client{
+	Transport: &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	},
+}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{

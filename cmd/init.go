@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var initEp string = "/cloud"
+var initEp string = "/cloud/"
 
 type initResp struct {
 	Status bool   `json:"status"`

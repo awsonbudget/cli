@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var podEp string = "/cloud/pod"
+var podEp string = "/cloud/pod/"
 
 type podLsResp struct {
 	Status bool   `json:"status"`

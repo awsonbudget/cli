@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var nodeEp string = "/cloud/node"
+var nodeEp string = "/cloud/node/"
 
 type nodeLsResp struct {
 	Status bool   `json:"status"`

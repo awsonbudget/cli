@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var jobEp = "/cloud/job"
+var jobEp = "/cloud/job/"
 
 type jobLsResp struct {
 	Status bool   `json:"status"`
