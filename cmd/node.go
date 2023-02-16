@@ -209,7 +209,6 @@ var nodeLogCmd = &cobra.Command{
 		// Print the response
 		if response.Status {
 			fmt.Print("Success: ")
-			fmt.Println(response.Msg)
 			fmt.Println(response.Data)
 		} else {
 			fmt.Print("Failed: ")
