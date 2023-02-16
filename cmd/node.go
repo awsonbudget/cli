@@ -189,7 +189,7 @@ var nodeLogCmd = &cobra.Command{
 		}
 
 		params := req.URL.Query()
-		params.Add("job_id", args[0])
+		params.Add("node_id", args[0])
 		req.URL.RawQuery = params.Encode()
 
 		// Send the request
