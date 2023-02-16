@@ -183,7 +183,7 @@ var nodeLogCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
-		req, err := http.NewRequest(http.MethodGet, ManagerEp+nodeEp+"/log", nil)
+		req, err := http.NewRequest(http.MethodGet, ManagerEp+nodeEp+"log/", nil)
 		if err != nil {
 			panic(err)
 		}
