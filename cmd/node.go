@@ -49,7 +49,7 @@ var nodeCmd = &cobra.Command{
 }
 
 var nodeLsCmd = &cobra.Command{
-	Use:   "ls [pod_name]",
+	Use:   "ls [pod_id]",
 	Short: "List all nodes in a specific pod. If no pod is given, all nodes will be listed",
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -61,7 +61,7 @@ var nodeLsCmd = &cobra.Command{
 
 		if len(args) > 0 {
 			params := req.URL.Query()
-			params.Add("pod_name", args[0])
+			params.Add("pod_id", args[0])
 			req.URL.RawQuery = params.Encode()
 		}
 
@@ -95,7 +95,7 @@ var nodeLsCmd = &cobra.Command{
 }
 
 var nodeRegisterCmd = &cobra.Command{
-	Use:   "register [node_name] [pod_name]",
+	Use:   "register [node_name] [pod_id]",
 	Short: "Register a node with a given name. If no pod is specified, it will be registered on the default pod",
 	Args:  cobra.RangeArgs(1, 2),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -108,7 +108,7 @@ var nodeRegisterCmd = &cobra.Command{
 		params := req.URL.Query()
 		params.Add("node_name", args[0])
 		if len(args) > 1 {
-			params.Add("pod_name", args[1])
+			params.Add("pod_id", args[1])
 		}
 		req.URL.RawQuery = params.Encode()
 
