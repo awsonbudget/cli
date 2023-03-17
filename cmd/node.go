@@ -96,8 +96,8 @@ var nodeLsCmd = &cobra.Command{
 
 var nodeRegisterCmd = &cobra.Command{
 	Use:   "register [node_name] [pod_id]",
-	Short: "Register a node with a given name. If no pod is specified, it will be registered on the default pod",
-	Args:  cobra.RangeArgs(1, 2),
+	Short: "Register a node with a given name and a given pod id.",
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodPost, ManagerEp+nodeEp, nil)
@@ -107,9 +107,7 @@ var nodeRegisterCmd = &cobra.Command{
 
 		params := req.URL.Query()
 		params.Add("node_name", args[0])
-		if len(args) > 1 {
-			params.Add("pod_id", args[1])
-		}
+		params.Add("pod_id", args[1])
 		req.URL.RawQuery = params.Encode()
 
 		// Send the request
@@ -138,7 +136,7 @@ var nodeRegisterCmd = &cobra.Command{
 }
 
 var nodeRmCmd = &cobra.Command{
-	Use:   "rm [node_name]",
+	Use:   "rm [node_id]",
 	Short: "Remove a specific node given its name",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -149,7 +147,7 @@ var nodeRmCmd = &cobra.Command{
 		}
 
 		params := req.URL.Query()
-		params.Add("node_name", args[0])
+		params.Add("node_id", args[0])
 		req.URL.RawQuery = params.Encode()
 
 		// Send the request
