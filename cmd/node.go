@@ -22,7 +22,7 @@ type nodeLsResp struct {
 		Status string `json:"status"`
 		Pod    struct {
 			Name string `json:"name"`
-			Id   int    `json:"id"`
+			Id   string `json:"id"`
 		} `json:"pod"`
 	} `json:"data"`
 }
