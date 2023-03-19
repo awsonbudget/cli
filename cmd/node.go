@@ -95,9 +95,9 @@ var nodeLsCmd = &cobra.Command{
 }
 
 var nodeRegisterCmd = &cobra.Command{
-	Use:   "register [node_name] [pod_id]",
-	Short: "Register a node with a given name and a given pod id.",
-	Args:  cobra.ExactArgs(2),
+	Use:   "register [node_type] [node_name] [pod_id]",
+	Short: "Register a node with a given type, name and a target pod id. The type can either be 'job' or 'server'",
+	Args:  cobra.ExactArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
 		req, err := http.NewRequest(http.MethodPost, ManagerEp+nodeEp, nil)
@@ -106,8 +106,9 @@ var nodeRegisterCmd = &cobra.Command{
 		}
 
 		params := req.URL.Query()
-		params.Add("node_name", args[0])
-		params.Add("pod_id", args[1])
+		params.Add("node_type", args[0])
+		params.Add("node_name", args[1])
+		params.Add("pod_id", args[2])
 		req.URL.RawQuery = params.Encode()
 
 		// Send the request

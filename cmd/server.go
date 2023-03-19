@@ -11,121 +11,47 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var podEp string = "/cloud/pod/"
+var serverEp string = "/cloud/server/"
 
-type podLsResp struct {
+type serverLaunchResp struct {
 	Status bool   `json:"status"`
 	Msg    string `json:"msg"`
 	Data   []struct {
-		Name  string `json:"name"`
-		Id    int    `json:"id"`
-		Nodes int    `json:"nodes"`
+		NodeId string `json:"node_id"`
+		Port   int    `json:"port"`
 	} `json:"data"`
 }
 
-type podRegisterResp struct {
+type serverResumeResp struct {
 	Status bool   `json:"status"`
 	Msg    string `json:"msg"`
+	Data   []struct {
+		NodeId string `json:"node_id"`
+		Port   int    `json:"port"`
+	} `json:"data"`
 }
 
-type podRmResp struct {
+type serverPauseResp struct {
 	Status bool   `json:"status"`
 	Msg    string `json:"msg"`
+	Data   []struct {
+		NodeId string `json:"node_id"`
+		Port   int    `json:"port"`
+	} `json:"data"`
 }
 
-var podCmd = &cobra.Command{
-	Use:   "pod",
-	Short: "All commands related to pod",
+var serverCmd = &cobra.Command{
+	Use:   "server",
+	Short: "All commands related to server",
 }
 
-var podLsCmd = &cobra.Command{
-	Use:   "ls",
-	Short: "List all pods",
-	Args:  cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
-		// Build the request
-		req, err := http.NewRequest(http.MethodGet, ManagerEp+podEp, nil)
-		if err != nil {
-			panic(err)
-		}
-
-		// Send the request
-		res, err := Client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer res.Body.Close()
-
-		// Decode the response
-		var response podLsResp
-		err = json.NewDecoder(res.Body).Decode(&response)
-		if err != nil {
-			panic(err)
-		}
-
-		// Print the response
-		if response.Status {
-			fmt.Print("Success: ")
-			fmt.Println(response.Msg)
-			for _, pod := range response.Data {
-				fmt.Printf("| ID: %d | Name: %s | Nodes: %d |\n",
-					pod.Id, pod.Name, pod.Nodes)
-			}
-		} else {
-			fmt.Print("Failed: ")
-			fmt.Println(response.Msg)
-		}
-	},
-}
-
-var podRegisterCmd = &cobra.Command{
-	Use:   "register [pod_type] [pod_name]",
-	Short: "Register a new pod given a pod type and a name",
-	Args:  cobra.ExactArgs(2),
-	Run: func(cmd *cobra.Command, args []string) {
-		// Build the request
-		req, err := http.NewRequest(http.MethodPost, ManagerEp+podEp, nil)
-		if err != nil {
-			panic(err)
-		}
-
-		params := req.URL.Query()
-		params.Add("pod_type", args[0])
-		params.Add("pod_name", args[1])
-		req.URL.RawQuery = params.Encode()
-
-		// Send the request
-		res, err := Client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer res.Body.Close()
-
-		// Decode the response
-		var response podRegisterResp
-		err = json.NewDecoder(res.Body).Decode(&response)
-		if err != nil {
-			panic(err)
-		}
-
-		// Print the response
-		if response.Status {
-			fmt.Print("Success: ")
-			fmt.Println(response.Msg)
-		} else {
-			fmt.Print("Failed: ")
-			fmt.Println(response.Msg)
-		}
-	},
-}
-
-var podRmCmd = &cobra.Command{
-	Use:   "rm [pod_id]",
-	Short: "Remove a specific pod given its id",
+var serverLaunchCmd = &cobra.Command{
+	Use:   "launch [pod_id]",
+	Short: "Launch all server nodes in a pod given the pod id",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
-		req, err := http.NewRequest(http.MethodDelete, ManagerEp+podEp, nil)
+		req, err := http.NewRequest(http.MethodPost, ManagerEp+serverEp+"launch/", nil)
 		if err != nil {
 			panic(err)
 		}
@@ -142,7 +68,7 @@ var podRmCmd = &cobra.Command{
 		defer res.Body.Close()
 
 		// Decode the response
-		var response podRmResp
+		var response serverLaunchResp
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			panic(err)
@@ -152,6 +78,98 @@ var podRmCmd = &cobra.Command{
 		if response.Status {
 			fmt.Print("Success: ")
 			fmt.Println(response.Msg)
+			for _, node := range response.Data {
+				fmt.Printf("| NodeId: %s |\n| Port: %d\n",
+					node.NodeId, node.Port)
+			}
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
+	},
+}
+
+var serverResumeCmd = &cobra.Command{
+	Use:   "resume [pod_id]",
+	Short: "Resume all server nodes in a pod given the pod id",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		// Build the request
+		req, err := http.NewRequest(http.MethodPost, ManagerEp+serverEp+"resume/", nil)
+		if err != nil {
+			panic(err)
+		}
+
+		params := req.URL.Query()
+		params.Add("pod_id", args[0])
+		req.URL.RawQuery = params.Encode()
+
+		// Send the request
+		res, err := Client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response serverResumeResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			panic(err)
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+			for _, node := range response.Data {
+				fmt.Printf("| NodeId: %s |\n| Port: %d\n",
+					node.NodeId, node.Port)
+			}
+		} else {
+			fmt.Print("Failed: ")
+			fmt.Println(response.Msg)
+		}
+	},
+}
+
+var serverPauseCmd = &cobra.Command{
+	Use:   "pause [pod_id]",
+	Short: "Pause all server nodes in a pod given the pod id",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		// Build the request
+		req, err := http.NewRequest(http.MethodPost, ManagerEp+serverEp+"pause/", nil)
+		if err != nil {
+			panic(err)
+		}
+
+		params := req.URL.Query()
+		params.Add("pod_id", args[0])
+		req.URL.RawQuery = params.Encode()
+
+		// Send the request
+		res, err := Client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer res.Body.Close()
+
+		// Decode the response
+		var response serverPauseResp
+		err = json.NewDecoder(res.Body).Decode(&response)
+		if err != nil {
+			panic(err)
+		}
+
+		// Print the response
+		if response.Status {
+			fmt.Print("Success: ")
+			fmt.Println(response.Msg)
+			for _, node := range response.Data {
+				fmt.Printf("| NodeId: %s |\n| Port: %d\n",
+					node.NodeId, node.Port)
+			}
 		} else {
 			fmt.Print("Failed: ")
 			fmt.Println(response.Msg)
@@ -160,17 +178,18 @@ var podRmCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(podCmd)
-	podCmd.AddCommand(podLsCmd)
-	podCmd.AddCommand(podRegisterCmd)
-	podCmd.AddCommand(podRmCmd)
+	rootCmd.AddCommand(serverCmd)
+	serverCmd.AddCommand(serverLaunchCmd)
+	serverCmd.AddCommand(serverPauseCmd)
+	serverCmd.AddCommand(serverResumeCmd)
+
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// podCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// nodeCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// podCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// nodeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
