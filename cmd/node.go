@@ -159,7 +159,7 @@ var nodeRmCmd = &cobra.Command{
 		defer res.Body.Close()
 
 		// Decode the response
-		var response podRmResp
+		var response nodeRmResp
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			panic(err)
