@@ -156,7 +156,7 @@ var elasticityDisableCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Build the request
-		req, err := http.NewRequest(http.MethodDelete, ManagerEp+elasticityEp+"disable/", nil)
+		req, err := http.NewRequest(http.MethodPost, ManagerEp+elasticityEp+"disable/", nil)
 		if err != nil {
 			panic(err)
 		}
@@ -173,7 +173,7 @@ var elasticityDisableCmd = &cobra.Command{
 		defer res.Body.Close()
 
 		// Decode the response
-		var response podRmResp
+		var response elasticityDisableResp
 		err = json.NewDecoder(res.Body).Decode(&response)
 		if err != nil {
 			panic(err)
