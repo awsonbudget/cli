@@ -17,9 +17,12 @@ type podLsResp struct {
 	Status bool   `json:"status"`
 	Msg    string `json:"msg"`
 	Data   []struct {
-		Name  string `json:"name"`
-		Id    int    `json:"id"`
-		Nodes int    `json:"nodes"`
+		Name   string  `json:"pod_name"`
+		Id     string  `json:"pod_id"`
+		Type   string  `json:"pod_type"`
+		Elstic bool    `json:"is_elastic"`
+		Usage  float32 `json:"usage"`
+		Nodes  int     `json:"total_nodes"`
 	} `json:"data"`
 }
 
@@ -65,11 +68,9 @@ var podLsCmd = &cobra.Command{
 
 		// Print the response
 		if response.Status {
-			fmt.Print("Success: ")
-			fmt.Println(response.Msg)
 			for _, pod := range response.Data {
-				fmt.Printf("| ID: %d | Name: %s | Nodes: %d |\n",
-					pod.Id, pod.Name, pod.Nodes)
+				fmt.Printf("| ID: %s |\n| Name: %s | Type: %s | Elastic: %t | Usage: %f | Nodes: %d |\n",
+					pod.Id, pod.Name, pod.Type, pod.Elstic, pod.Usage, pod.Nodes)
 			}
 		} else {
 			fmt.Print("Failed: ")

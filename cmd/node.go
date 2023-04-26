@@ -17,13 +17,14 @@ type nodeLsResp struct {
 	Status bool   `json:"status"`
 	Msg    string `json:"msg"`
 	Data   []struct {
-		Name   string `json:"name"`
-		Id     string `json:"id"`
-		Status string `json:"status"`
+		Name   string `json:"node_name"`
+		Id     string `json:"node_id"`
+		Type   string `json:"node_type"`
+		Status string `json:"node_status"`
 		Pod    struct {
-			Name string `json:"name"`
-			Id   string `json:"id"`
-		} `json:"pod"`
+			Name string `json:"pod_name"`
+			Id   string `json:"pod_id"`
+		} `json:"pod_data"`
 	} `json:"data"`
 }
 
@@ -84,8 +85,8 @@ var nodeLsCmd = &cobra.Command{
 			fmt.Print("Success: ")
 			fmt.Println(response.Msg)
 			for _, node := range response.Data {
-				fmt.Printf("| ID: %s |\n| Name: %s | Status: %s | Pod: %s |\n",
-					node.Id, node.Name, node.Status, node.Pod.Name)
+				fmt.Printf("| ID: %s |\n| Name: %s | Type: %s | Status: %s | Pod: %s |\n",
+					node.Id, node.Name, node.Type, node.Status, node.Pod.Name)
 			}
 		} else {
 			fmt.Print("Failed: ")
